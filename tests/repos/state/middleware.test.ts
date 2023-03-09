@@ -11,13 +11,15 @@ const create = () => {
 };
 
 test("should apply side-effects when (un)starring repos", () => {
-  expect(localRatingServiceFactory().getStarredItems()).toEqual([]);
+  const getStoredIds = () =>
+    Object.keys(localRatingServiceFactory().getStoredMap()).map(Number);
+  expect(getStoredIds()).toEqual([]);
 
   const { next, invoke } = create();
 
-  invoke(actions.star(1));
-  expect(localRatingServiceFactory().getStarredItems()).toContain(1);
+  invoke(actions.starRepo({ id: 1, name: "foo" } as any));
+  expect(getStoredIds()).toContain(1);
 
-  invoke(actions.unstar(1));
-  expect(localRatingServiceFactory().getStarredItems()).not.toContain(1);
+  invoke(actions.unstarRepo({ id: 1, name: "foo" } as any));
+  expect(getStoredIds()).not.toContain(1);
 });

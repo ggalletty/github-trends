@@ -42,7 +42,7 @@ export class GithubRepoService implements RepoService {
 /** Makes a GitHub repo service instance using fetch as client */
 export const githubRepoFactory = () =>
   // use mock service for development as there's a rate limit
-  import.meta.env.DEV
+  import.meta.env.MODE === "development"
     ? mockGithubRepoServiceFactory()
     : new GithubRepoService(new FetchClient());
 

@@ -6,14 +6,14 @@ describe("repos state", () => {
   const store = setupStore();
 
   it("should support (un)starring repos", () => {
-    store.dispatch(actions.star(1));
-    expect(store.getState().repos.starred).toContain(1);
-    store.dispatch(actions.unstar(1));
-    expect(store.getState().repos.starred).not.toContain(1);
+    store.dispatch(actions.starRepo({ id: 1, name: "foo" } as any));
+    expect(store.getState().repos.starred.ids).toContain(1);
+    store.dispatch(actions.unstarRepo({ id: 1, name: "foo" } as any));
+    expect(store.getState().repos.starred.ids).not.toContain(1);
   });
 
   it("should fetch repos and update store", async () => {
-    vi.spyOn(window, "fetch").mockResolvedValue(<any>{
+    vi.spyOn(global, "fetch").mockResolvedValue(<any>{
       json: () =>
         Promise.resolve({
           items: [{ id: 1, name: "test" }],

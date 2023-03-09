@@ -1,3 +1,4 @@
+import Filters from "./repos/components/Filters";
 import Table from "./repos/components/Table";
 
 function App() {
@@ -11,6 +12,7 @@ function App() {
           A collection of the latest and hottest repos in GitHub.
         </p>
       </div>
+      <Filters />
       <Table />
     </div>
   );

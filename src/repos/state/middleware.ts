@@ -5,14 +5,14 @@ import { actions } from ".";
 const listener = createListenerMiddleware();
 
 listener.startListening({
-  actionCreator: actions.star,
+  actionCreator: actions.starRepo,
   effect: (action) => {
     localRatingServiceFactory().starItem(action.payload);
   },
 });
 
 listener.startListening({
-  actionCreator: actions.unstar,
+  actionCreator: actions.unstarRepo,
   effect: (action) => {
     localRatingServiceFactory().unstarItem(action.payload);
   },
