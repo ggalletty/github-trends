@@ -70,6 +70,7 @@ const Loading = () => (
 
 const connector = connect(
   (state: RootState) => ({
+    sortOrder: state.repos.sortOrder,
     loading: state.repos.loading,
     repoList: selectors.selectFiltered(state),
   }),

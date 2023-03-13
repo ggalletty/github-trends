@@ -18,6 +18,8 @@ const starredAdapter = createEntityAdapter<Repo>();
 
 type RepoState = {
   loading: boolean;
+  sortOrder: "asc" | "desc";
+  sortBy: "created_at";
   filter: "all" | "starred";
   repos: EntityState<Repo>;
   starred: EntityState<Repo>;
@@ -36,10 +38,15 @@ const slice = createSlice({
   initialState: {
     loading: false,
     filter: "all",
+    sortBy: "created_at",
+    sortOrder: "desc",
     repos: repoAdapter.getInitialState(),
     starred: getStoredStarredRepos(),
   } as RepoState,
   reducers: {
+    changeOrder(state, action: PayloadAction<"asc" | "desc">) {
+      state.sortOrder = action.payload;
+    },
     setFilter: (state, action: PayloadAction<RepoState["filter"]>) => {
       state.filter = action.payload;
     },
@@ -80,14 +87,23 @@ export const selectors = {
   isStarred: (state: RootState, repoId: number) =>
     starredSelectors.selectIds(state).includes(repoId),
   selectById: repoSelectors.selectById,
-  selectAll: repoSelectors.selectAll,
-  selectStarred: starredSelectors.selectAll,
+  selectAll: (state: RootState) =>
+    repoSelectors.selectAll(state).sort((a, b) => {
+      const sortProp = state.repos.sortBy;
+      console.log(a[sortProp], b[sortProp]);
+      if (state.repos.sortOrder === "desc") {
+        return b[sortProp].localeCompare(a[sortProp]);
+      } else {
+        return a[sortProp].localeCompare(b[sortProp]);
+      }
+    }),
+  selectStarred: (state: RootState) => selectors.selectAll(state),
   selectFiltered: (state: RootState) => {
     switch (state.repos.filter) {
       case "starred":
-        return starredSelectors.selectAll(state);
+        return selectors.selectAll(state);
       default:
-        return repoSelectors.selectAll(state);
+        return selectors.selectAll(state);
     }
   },
 };
